@@ -1,9 +1,16 @@
 import { request } from "./client";
-import type { Laporan, StatusLaporan } from "../types";
+import type { Laporan, Penanganan, StatusLaporan } from "../types";
 
+export function getLaporanById(id: number): Promise<Laporan> {
+  return request<Laporan>(`/laporan/${id}`);
+}
+
+export function getPenangananLaporan(id: number): Promise<Penanganan[]> {
+  return request<Penanganan[]>(`/laporan/${id}/penanganan`);
+}
 export interface LaporanInput {
   pelapor_id: number;
-  judul: string;
+  judul: string;    
   deskripsi?: string;
   kategori?: string;
   lokasi?: string;

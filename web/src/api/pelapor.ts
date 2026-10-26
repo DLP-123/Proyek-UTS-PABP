@@ -1,6 +1,7 @@
 import { request } from "./client";
 import type { Pelapor } from "../types";
 
+
 // Bentuk data yang dikirim ke server (sesuai body POST di kontrak).
 export interface PelaporInput {
   nama: string;
@@ -17,4 +18,7 @@ export function createPelapor(input: PelaporInput): Promise<Pelapor> {
     method: "POST",
     body: JSON.stringify(input), // objek JS harus diubah jadi teks JSON
   });
+}
+export function getPelaporById(id: number): Promise<Pelapor> {
+  return request<Pelapor>(`/pelapor/${id}`);
 }

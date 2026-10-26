@@ -3,8 +3,11 @@ import { getLaporan, deleteLaporan } from "../api/laporan";
 import { ApiError } from "../api/client";
 import type { Laporan } from "../types";
 import LaporanEditForm from "./LaporanEditForm";
+interface Props {
+  onDetail: (id: number) => void;
+}
 
-export default function LaporanList() {
+export default function LaporanList({ onDetail }: Props) {
   const [laporan, setLaporan] = useState<Laporan[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -99,6 +102,7 @@ export default function LaporanList() {
               <td>{l.status}</td>
               <td>
                 <button onClick={() => setEditing(l)}>Edit</button>{" "}
+                <button onClick={() => onDetail(l.id)}>Detail</button>{" "}
                 <button
                   onClick={() => handleHapus(l)}
                   disabled={deletingId === l.id}
