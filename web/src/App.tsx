@@ -1,14 +1,12 @@
-import { useEffect } from "react";
-import { getLaporan } from "./api/laporan";
+import LaporanList from "./pages/LaporanList";
 
 function App() {
-  useEffect(() => {
-    getLaporan()
-      .then((data) => console.log("Data laporan:", data))
-      .catch((err) => console.error("Gagal:", err));
-  }, []);
-
-  return <h1>Tes koneksi API</h1>;
+  return (
+    <div style={{ padding: 16 }}>
+      <h1>Sistem Pelaporan Keluhan</h1>
+      <LaporanList />
+    </div>
+  );
 }
 
 export default App;
