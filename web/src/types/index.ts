@@ -1,5 +1,12 @@
 // Union type: variabel hanya boleh berisi salah satu dari empat string ini.
 export type StatusLaporan = "Baru" | "Diproses" | "Selesai" | "Ditolak";
+// Daftar status valid, dipakai untuk mengisi dropdown.
+export const DAFTAR_STATUS: StatusLaporan[] = [
+  "Baru",
+  "Diproses",
+  "Selesai",
+  "Ditolak",
+];
 
 export interface Pelapor {
   id: number;
