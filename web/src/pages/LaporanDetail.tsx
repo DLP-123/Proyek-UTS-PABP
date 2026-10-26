@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { getLaporanById, getPenangananLaporan } from "../api/laporan";
 import { getPelaporById } from "../api/pelapor";
+import { deletePenanganan } from "../api/penanganan";
+import { ApiError } from "../api/client";
 import type { Laporan, Pelapor, Penanganan } from "../types";
 import PenangananForm from "./PenangananForm";
+import PenangananEditForm from "./PenangananEditForm";
 
 interface Props {
   id: number;
@@ -22,6 +25,11 @@ export default function LaporanDetail({ id, onKembali }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
 
+  // Penanganan yang sedang diedit; null = tidak ada.
+  const [editing, setEditing] = useState<Penanganan | null>(null);
+  const [aksiError, setAksiError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
   useEffect(() => {
     let batal = false;
 
@@ -29,12 +37,10 @@ export default function LaporanDetail({ id, onKembali }: Props) {
       try {
         setLoading(true);
         setError(null);
-        // Laporan dulu, karena pelapor_id baru diketahui dari sini.
         const l = await getLaporanById(id);
-        // Dua request berikutnya tidak saling bergantung, jadi dijalankan bersamaan.
         const [r, p] = await Promise.all([
           getPenangananLaporan(id),
-          getPelaporById(l.pelapor_id).catch(() => null), // gagal ambil pelapor tidak boleh mematikan halaman
+          getPelaporById(l.pelapor_id).catch(() => null),
         ]);
         if (!batal) {
           setLaporan(l);
@@ -55,6 +61,24 @@ export default function LaporanDetail({ id, onKembali }: Props) {
       batal = true;
     };
   }, [id, refresh]);
+
+  async function handleHapus(p: Penanganan) {
+    if (!window.confirm(`Hapus penanganan oleh "${p.petugas}"?`)) return;
+
+    setAksiError(null);
+    setDeletingId(p.id);
+    try {
+      await deletePenanganan(p.id);
+      setRefresh((n) => n + 1);
+    } catch (err) {
+      setAksiError(err instanceof Error ? err.message : "Gagal menghapus.");
+      if (err instanceof ApiError && err.status === 404) {
+        setRefresh((n) => n + 1);
+      }
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   const tombolKembali = <button onClick={onKembali}>← Kembali</button>;
 
@@ -86,6 +110,7 @@ export default function LaporanDetail({ id, onKembali }: Props) {
       </table>
 
       <h3>Riwayat Penanganan</h3>
+      {aksiError && <p style={{ color: "red" }}>{aksiError}</p>}
       {riwayat.length === 0 ? (
         <p>Belum ada penanganan.</p>
       ) : (
@@ -96,6 +121,7 @@ export default function LaporanDetail({ id, onKembali }: Props) {
               <th>Petugas</th>
               <th>Catatan</th>
               <th>Status Baru</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -105,15 +131,37 @@ export default function LaporanDetail({ id, onKembali }: Props) {
                 <td>{p.petugas}</td>
                 <td>{p.catatan ?? "-"}</td>
                 <td>{p.status_baru ?? "-"}</td>
+                <td>
+                  <button onClick={() => setEditing(p)}>Edit</button>{" "}
+                  <button
+                    onClick={() => handleHapus(p)}
+                    disabled={deletingId === p.id}
+                  >
+                    {deletingId === p.id ? "Menghapus..." : "Hapus"}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-    <PenangananForm
-        laporanId={laporan.id}
-        onSukses={() => setRefresh((n) => n + 1)}
-    />  
+
+      {editing ? (
+        <PenangananEditForm
+          key={editing.id}
+          penanganan={editing}
+          onBatal={() => setEditing(null)}
+          onSelesai={() => {
+            setEditing(null);
+            setRefresh((n) => n + 1);
+          }}
+        />
+      ) : (
+        <PenangananForm
+          laporanId={laporan.id}
+          onSukses={() => setRefresh((n) => n + 1)}
+        />
+      )}
     </div>
   );
 }
