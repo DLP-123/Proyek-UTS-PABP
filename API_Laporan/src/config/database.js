@@ -13,6 +13,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.error('❌ Gagal konek SQLite:', err.message);
     process.exit(1);
   }
+  db.run('PRAGMA foreign_keys = ON'); 
   console.log('✅ Terhubung ke SQLite:', dbPath);
 });
 
