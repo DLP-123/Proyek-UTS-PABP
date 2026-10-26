@@ -5,6 +5,7 @@ const { initializeDatabase } = require('./src/config/database');
 const testRoutes =  require('./src/routes/test')
 const laporanRoutes = require('./src/routes/laporanRoutes');
 const pelaporRoutes = require('./src/routes/pelaporRoutes');
+const penangananRoutes = require('./src/routes/penangananRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,7 @@ app.get('/', (req, res) => {
 app.use('/api/test', testRoutes);
 app.use('/api/laporan', laporanRoutes);
 app.use('/api/pelapor', pelaporRoutes);
+app.use('/api/penanganan', penangananRoutes);
 
 /* 404 */
 app.use((req, res) => {

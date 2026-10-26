@@ -26,3 +26,13 @@ CREATE TABLE IF NOT EXISTS laporan (
     updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pelapor_id) REFERENCES pelapor(id)
 );
+
+CREATE TABLE IF NOT EXISTS penanganan (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    laporan_id  INTEGER NOT NULL,
+    petugas     TEXT NOT NULL,
+    catatan     TEXT,
+    status_baru TEXT,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (laporan_id) REFERENCES laporan(id)
+);
