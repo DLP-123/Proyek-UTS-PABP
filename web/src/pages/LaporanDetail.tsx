@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getLaporanById, getPenangananLaporan } from "../api/laporan";
 import { getPelaporById } from "../api/pelapor";
 import type { Laporan, Pelapor, Penanganan } from "../types";
+import PenangananForm from "./PenangananForm";
 
 interface Props {
   id: number;
@@ -19,6 +20,7 @@ export default function LaporanDetail({ id, onKembali }: Props) {
   const [riwayat, setRiwayat] = useState<Penanganan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
     let batal = false;
@@ -52,7 +54,7 @@ export default function LaporanDetail({ id, onKembali }: Props) {
     return () => {
       batal = true;
     };
-  }, [id]);
+  }, [id, refresh]);
 
   const tombolKembali = <button onClick={onKembali}>← Kembali</button>;
 
@@ -108,6 +110,10 @@ export default function LaporanDetail({ id, onKembali }: Props) {
           </tbody>
         </table>
       )}
+    <PenangananForm
+        laporanId={laporan.id}
+        onSukses={() => setRefresh((n) => n + 1)}
+    />  
     </div>
   );
 }
