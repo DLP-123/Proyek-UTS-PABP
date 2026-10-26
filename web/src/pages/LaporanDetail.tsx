@@ -13,8 +13,13 @@ interface Props {
 }
 
 function formatTanggal(s: string): string {
-  const d = new Date(s);
-  return isNaN(d.getTime()) ? s : d.toLocaleString("id-ID");
+  const iso = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)
+    ? s.replace(" ", "T") + "Z"
+    : s;
+  const d = new Date(iso);
+  return isNaN(d.getTime())
+    ? s
+    : d.toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
 }
 
 export default function LaporanDetail({ id, onKembali }: Props) {
@@ -102,9 +107,9 @@ export default function LaporanDetail({ id, onKembali }: Props) {
         <tbody>
           <tr><th>Status</th><td>{laporan.status}</td></tr>
           <tr><th>Pelapor</th><td>{pelapor ? pelapor.nama : `(id ${laporan.pelapor_id})`}</td></tr>
-          <tr><th>Kategori</th><td>{laporan.kategori ?? "-"}</td></tr>
-          <tr><th>Lokasi</th><td>{laporan.lokasi ?? "-"}</td></tr>
-          <tr><th>Deskripsi</th><td>{laporan.deskripsi ?? "-"}</td></tr>
+          <tr><th>Kategori</th><td>{laporan.kategori || "-"}</td></tr>
+          <tr><th>Lokasi</th><td>{laporan.lokasi || "-"}</td></tr>
+          <tr><th>Deskripsi</th><td>{laporan.deskripsi || "-"}</td></tr>
           <tr><th>Dibuat</th><td>{formatTanggal(laporan.created_at)}</td></tr>
         </tbody>
       </table>
@@ -129,7 +134,7 @@ export default function LaporanDetail({ id, onKembali }: Props) {
               <tr key={p.id}>
                 <td>{formatTanggal(p.created_at)}</td>
                 <td>{p.petugas}</td>
-                <td>{p.catatan ?? "-"}</td>
+                <td>{p.catatan || "-"}</td>
                 <td>{p.status_baru ?? "-"}</td>
                 <td>
                   <button onClick={() => setEditing(p)}>Edit</button>{" "}

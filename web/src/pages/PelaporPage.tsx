@@ -177,8 +177,8 @@ export default function PelaporPage() {
               <tr key={p.id}>
                 <td>{p.id}</td>
                 <td>{p.nama}</td>
-                <td>{p.email ?? "-"}</td>
-                <td>{p.telepon ?? "-"}</td>
+                <td>{p.email || "-"}</td>
+                <td>{p.telepon || "-"}</td>
                 <td>
                   <button onClick={() => mulaiEdit(p)}>Edit</button>{" "}
                   <button

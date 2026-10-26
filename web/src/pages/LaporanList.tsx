@@ -97,8 +97,8 @@ export default function LaporanList({ onDetail }: Props) {
             <tr key={l.id}>
               <td>{l.id}</td>
               <td>{l.judul}</td>
-              <td>{l.kategori ?? "-"}</td>
-              <td>{l.lokasi ?? "-"}</td>
+              <td>{l.kategori || "-"}</td>
+              <td>{l.lokasi || "-"}</td>
               <td>{l.status}</td>
               <td>
                 <button onClick={() => setEditing(l)}>Edit</button>{" "}
