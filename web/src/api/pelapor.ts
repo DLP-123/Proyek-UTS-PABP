@@ -22,3 +22,21 @@ export function createPelapor(input: PelaporInput): Promise<Pelapor> {
 export function getPelaporById(id: number): Promise<Pelapor> {
   return request<Pelapor>(`/pelapor/${id}`);
 }
+
+// Semua field opsional: PUT hanya mengirim yang ingin diubah.
+export interface PelaporUpdate {
+  nama?: string;
+  email?: string;
+  telepon?: string;
+}
+
+export function updatePelapor(id: number, input: PelaporUpdate): Promise<Pelapor> {
+  return request<Pelapor>(`/pelapor/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+export function deletePelapor(id: number): Promise<null> {
+  return request<null>(`/pelapor/${id}`, { method: "DELETE" });
+}
