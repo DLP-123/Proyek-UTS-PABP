@@ -1,16 +1,9 @@
 import { request } from "./client";
 import type { Laporan, Penanganan, StatusLaporan } from "../types";
 
-export function getLaporanById(id: number): Promise<Laporan> {
-  return request<Laporan>(`/laporan/${id}`);
-}
-
-export function getPenangananLaporan(id: number): Promise<Penanganan[]> {
-  return request<Penanganan[]>(`/laporan/${id}/penanganan`);
-}
 export interface LaporanInput {
   pelapor_id: number;
-  judul: string;    
+  judul: string;
   deskripsi?: string;
   kategori?: string;
   lokasi?: string;
@@ -25,8 +18,17 @@ export interface LaporanUpdate {
   status?: StatusLaporan;
 }
 
-export function getLaporan(): Promise<Laporan[]> {
-  return request<Laporan[]>("/laporan");
+export function getLaporan(status?: StatusLaporan): Promise<Laporan[]> {
+  const query = status ? `?status=${encodeURIComponent(status)}` : "";
+  return request<Laporan[]>(`/laporan${query}`);
+}
+
+export function getLaporanById(id: number): Promise<Laporan> {
+  return request<Laporan>(`/laporan/${id}`);
+}
+
+export function getPenangananLaporan(id: number): Promise<Penanganan[]> {
+  return request<Penanganan[]>(`/laporan/${id}/penanganan`);
 }
 
 export function createLaporan(input: LaporanInput): Promise<Laporan> {
