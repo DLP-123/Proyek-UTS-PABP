@@ -21,27 +21,42 @@ export default function LaporanList({ onDetail }: Props) {
   // "" = semua status.
   const [filter, setFilter] = useState<StatusLaporan | "">("");
 
+  // Teks yang sedang diketik (berubah di setiap ketikan).
+  const [search, setSearch] = useState("");
+
+  // Teks yang benar-benar dipakai memanggil API (diperbarui setelah jeda).
+  const [searchAktif, setSearchAktif] = useState("");
+
   // Hanya respons dari request terbaru yang boleh mengisi state.
   const reqId = useRef(0);
 
   const muat = useCallback(async () => {
-    const myId = ++reqId.current;
-    try {
-      const data = await getLaporan(filter || undefined);
-      if (myId !== reqId.current) return;
-      setLaporan(data);
-      setError(null);
-    } catch (err) {
-      if (myId !== reqId.current) return;
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan.");
-    } finally {
-      if (myId === reqId.current) setLoading(false);
-    }
-  }, [filter]);
+  const myId = ++reqId.current;
+  try {
+    const data = await getLaporan(filter || undefined, searchAktif || undefined);
+    if (myId !== reqId.current) return;
+    setLaporan(data);
+    setError(null);
+  } catch (err) {
+    if (myId !== reqId.current) return;
+    setError(err instanceof Error ? err.message : "Terjadi kesalahan.");
+  } finally {
+    if (myId === reqId.current) setLoading(false);
+  }
+  }, [filter, searchAktif]);
 
   useEffect(() => {
     muat();
   }, [muat]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchAktif(search.trim());
+    }, 300);
+
+  // Cleanup: batalkan timer lama saat search berubah lagi.
+  return () => clearTimeout(timer);
+  }, [search]);
 
   function ubahFilter(nilai: StatusLaporan | "") {
     setLoading(true);
@@ -79,6 +94,15 @@ export default function LaporanList({ onDetail }: Props) {
 
   const kontrolFilter = (
     <div style={{ marginBottom: 12 }}>
+      <label>
+        Cari laporan:{" "}
+        <input
+          type="text"
+          placeholder="Ketikkan judul atau deskripsi..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </label>
       <label>
         Filter status:{" "}
         <select
@@ -121,11 +145,11 @@ export default function LaporanList({ onDetail }: Props) {
       <>
         {kontrolFilter}
         {pesanAksi}
-        <p>
-          {filter
-            ? `Tidak ada laporan berstatus "${filter}".`
-            : "Belum ada laporan."}
-        </p>
+         <p>
+           {searchAktif || filter
+              ? "Laporan tidak tepat dengan pencarian atau filter."
+              : "Belum ada laporan."}
+         </p>
       </>
     );
   }

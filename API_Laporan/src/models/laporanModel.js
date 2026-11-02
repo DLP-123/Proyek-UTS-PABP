@@ -9,10 +9,10 @@ const findAllLaporan = async (status, search) => {
     conditions.push('status = ?');
     params.push(status);
   }
+
   if (search) {
     conditions.push('(judul LIKE ? OR deskripsi LIKE ?)');
-  
-  params.push('%${search}%', '%${search}%');  
+    params.push(`%${search}%`, `%${search}%`);  
   }
 
   if (conditions.length > 0) {

@@ -18,9 +18,17 @@ export interface LaporanUpdate {
   status?: StatusLaporan;
 }
 
-export function getLaporan(status?: StatusLaporan): Promise<Laporan[]> {
-  const query = status ? `?status=${encodeURIComponent(status)}` : "";
-  return request<Laporan[]>(`/laporan${query}`);
+export function getLaporan(
+  status?: StatusLaporan,
+  search?: string
+): Promise<Laporan[]> {
+  // URLSearchParams menyusun query string dan otomatis meng-encode karakter khusus.
+  const params = new URLSearchParams();
+  if (status) params.set("status", status);
+  if (search) params.set("search", search);
+
+  const query = params.toString();
+  return request<Laporan[]>(`/laporan${query ? `?${query}` : ""}`);
 }
 
 export function getLaporanById(id: number): Promise<Laporan> {
