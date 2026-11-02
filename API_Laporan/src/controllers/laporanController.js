@@ -11,7 +11,7 @@ const fail = (res, code, message, error = null) =>
 
 const getAllLaporan = async (req, res) => {
   try {
-    const data = await laporanModel.findAllLaporan(req.query.status);
+    const data = await laporanModel.findAllLaporan(req.query.status, req.query.search);
     success(res, 200, 'Berhasil mengambil semua laporan', data);
   } catch (error) {
     console.error('[getAllLaporan]', error);

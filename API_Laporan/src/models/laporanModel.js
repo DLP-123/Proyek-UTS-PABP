@@ -1,13 +1,26 @@
 const { dbRun, dbGet, dbAll } = require('../middlewares_helpers/sqlite3_helpers');
 
-const findAllLaporan = async (status) => {
+const findAllLaporan = async (status, search) => {
+  let query = 'SELECT * FROM laporan';
+  const conditions = [];
+  const params = [];
+
   if (status) {
-    return await dbAll(
-      'SELECT * FROM laporan WHERE status = ? ORDER BY id DESC',
-      [status]
-    );
+    conditions.push('status = ?');
+    params.push(status);
   }
-  return await dbAll('SELECT * FROM laporan ORDER BY id DESC');
+  if (search) {
+    conditions.push('(judul LIKE ? OR deskripsi LIKE ?)');
+  
+  params.push('%${search}%', '%${search}%');  
+  }
+
+  if (conditions.length > 0) {
+    query += ' WHERE ' + conditions.join(' AND ');
+  }
+  query += ' ORDER BY id DESC';
+
+  return await dbAll(query, params);
 };
 
 const findLaporanById = async (id) => {
