@@ -6,6 +6,7 @@ import { ApiError } from "../api/client";
 import type { Laporan, Pelapor, Penanganan } from "../types";
 import PenangananForm from "./PenangananForm";
 import PenangananEditForm from "./PenangananEditForm";
+import StatusBadge from "../komponen/StatusBadge";
 
 interface Props {
   id: number;
@@ -105,7 +106,7 @@ export default function LaporanDetail({ id, onKembali }: Props) {
       </h2>
       <table border={1} cellPadding={8}>
         <tbody>
-          <tr><th>Status</th><td>{laporan.status}</td></tr>
+          <tr><th>Status</th><td><StatusBadge status={laporan.status} /></td></tr>
           <tr><th>Pelapor</th><td>{pelapor ? pelapor.nama : `(id ${laporan.pelapor_id})`}</td></tr>
           <tr><th>Kategori</th><td>{laporan.kategori || "-"}</td></tr>
           <tr><th>Lokasi</th><td>{laporan.lokasi || "-"}</td></tr>
@@ -135,7 +136,7 @@ export default function LaporanDetail({ id, onKembali }: Props) {
                 <td>{formatTanggal(p.created_at)}</td>
                 <td>{p.petugas}</td>
                 <td>{p.catatan || "-"}</td>
-                <td>{p.status_baru ?? "-"}</td>
+                <td><StatusBadge status={p.status_baru} /></td>
                 <td>
                   <button onClick={() => setEditing(p)}>Edit</button>{" "}
                   <button

@@ -4,6 +4,7 @@ import { ApiError } from "../api/client";
 import { DAFTAR_STATUS } from "../types";
 import type { Laporan, StatusLaporan } from "../types";
 import LaporanEditForm from "./LaporanEditForm";
+import StatusBadge from "../komponen/StatusBadge";
 
 interface Props {
   onDetail: (id: number) => void;
@@ -176,7 +177,7 @@ export default function LaporanList({ onDetail }: Props) {
               <td>{l.judul}</td>
               <td>{l.kategori || "-"}</td>
               <td>{l.lokasi || "-"}</td>
-              <td>{l.status}</td>
+              <td><StatusBadge status={l.status} /></td>
               <td>
                 <button onClick={() => onDetail(l.id)}>Detail</button>{" "}
                 <button onClick={() => setEditing(l)}>Edit</button>{" "}
