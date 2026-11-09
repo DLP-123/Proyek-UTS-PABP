@@ -19,16 +19,11 @@ export default function LaporanList({ onDetail }: Props) {
   const [aksiError, setAksiError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  // "" = semua status.
   const [filter, setFilter] = useState<StatusLaporan | "">("");
 
-  // Teks yang sedang diketik (berubah di setiap ketikan).
   const [search, setSearch] = useState("");
 
-  // Teks yang benar-benar dipakai memanggil API (diperbarui setelah jeda).
   const [searchAktif, setSearchAktif] = useState("");
-
-  // Hanya respons dari request terbaru yang boleh mengisi state.
   const reqId = useRef(0);
 
   const muat = useCallback(async () => {
@@ -55,7 +50,7 @@ export default function LaporanList({ onDetail }: Props) {
       setSearchAktif(search.trim());
     }, 300);
 
-  // Cleanup: batalkan timer lama saat search berubah lagi.
+
   return () => clearTimeout(timer);
   }, [search]);
 

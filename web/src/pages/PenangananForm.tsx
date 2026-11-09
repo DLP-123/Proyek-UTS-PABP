@@ -6,13 +6,13 @@ import type { StatusLaporan } from "../types";
 
 interface Props {
   laporanId: number;
-  onSukses: () => void; // dipanggil setelah POST berhasil, untuk memuat ulang detail
+  onSukses: () => void; 
 }
 
 export default function PenangananForm({ laporanId, onSukses }: Props) {
   const [petugas, setPetugas] = useState("");
   const [catatan, setCatatan] = useState("");
-  // "" artinya "tidak mengubah status".
+
   const [statusBaru, setStatusBaru] = useState<StatusLaporan | "">("");
 
   const [submitting, setSubmitting] = useState(false);

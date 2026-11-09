@@ -31,7 +31,7 @@ export default function LaporanDetail({ id, onKembali }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
 
-  // Penanganan yang sedang diedit; null = tidak ada.
+
   const [editing, setEditing] = useState<Penanganan | null>(null);
   const [aksiError, setAksiError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);

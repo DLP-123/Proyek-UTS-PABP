@@ -18,12 +18,12 @@ app.use(express.urlencoded({ extended: true }));
 /* Root route */
 app.get('/', (req, res) => {
   res.json({
-    message: '🚀 API Pelaporan Keluhan sedang berjalan',
+    message: '🚀 Server jalan dengan aman nih bos!',
     endpoints: {
-      'GET    /api/laporan':      'Ambil semua laporan (opsional ?status=Baru)',
-      'GET    /api/laporan/:id':  'Ambil laporan by id',
-      'POST   /api/laporan':      'Buat laporan baru',
-      'PUT    /api/laporan/:id':  'Update laporan / ubah status',
+      'GET    /api/laporan':      'Semua laporan berhasil ditampilkan (opsional ?status=Baru)',
+      'GET    /api/laporan/:id':  'Semua laporan berdasarkan ID',
+      'POST   /api/laporan':      'Lapor Yuk!',
+      'PUT    /api/laporan/:id':  'Ubah Laporan',
       'DELETE /api/laporan/:id':  'Hapus laporan',
     },
   });
@@ -37,7 +37,7 @@ app.use('/api/penanganan', penangananRoutes);
 
 /* 404 */
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: 'Endpoint tidak ditemukan' });
+  res.status(404).json({ success: false, message: 'Ga ada nih endpointnya!' });
 });
 
 /* Start */
